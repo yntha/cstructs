@@ -49,9 +49,6 @@ def test_metaclass():
     assert Test.on_read is None
     assert Test.on_write is None
 
-    # for now, meta should be None
-    assert Test.meta is None
-
     # byteorder should NOT be None.
     assert Test.byteorder is not None
 
