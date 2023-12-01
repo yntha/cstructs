@@ -14,6 +14,7 @@
 #  this program. If not, see <http://www.gnu.org/licenses/>.                           -
 # --------------------------------------------------------------------------------------
 import pytest
+import io
 
 from cstructs import datastruct, DataStruct
 from cstructs.datastruct.metadata import StructMeta
@@ -21,7 +22,7 @@ from cstructs.datastruct.metadata import StructMeta
 
 def test_metaclass():
     @datastruct
-    class Test(DataStruct):
+    class Test(metaclass=DataStruct):
         pass
 
     # check that the metaclass transforms the class name
@@ -47,6 +48,9 @@ def test_metaclass():
     # meta should be an instance of StructMeta
     assert isinstance(Test.meta, StructMeta)
 
+    # for now, meta should be None
+    assert Test.meta is None
+
     # byteorder should NOT be None.
     assert Test.byteorder is not None
 
@@ -64,3 +68,5 @@ def test_metaclass():
         Test(1, 2, 3)
     with pytest.raises(TypeError):
         Test(None)
+
+    Test(io.BytesIO(b""))

@@ -14,15 +14,25 @@
 #  this program. If not, see <http://www.gnu.org/licenses/>.                           -
 # --------------------------------------------------------------------------------------
 import struct
+import typing
 
-from cstructs.exc import InvalidByteOrder, InvalidFormatString
+from cstructs.exc import InvalidByteOrder
+from cstructs.datastruct.metadata import StructMeta
 
 
 _byteorder_map = {"native": "@", "little": "<", "network": "!", "big": ">"}
 
 
 class DataStruct(type):
-    pass
+    on_read: typing.Callable = None
+    on_write: typing.Callable = None
+    meta: StructMeta = None
+    byteorder: str = None
+    size: int = None
+
+    def __call__(cls, stream: typing.BinaryIO, *args):
+        if not hasattr(stream, "read"):
+            raise TypeError("Expected stream to have a read method")
 
 
 def datastruct(cls=None, /, *, byteorder: str = "native"):
@@ -30,6 +40,8 @@ def datastruct(cls=None, /, *, byteorder: str = "native"):
         raise InvalidByteOrder(f"Invalid byteorder: {byteorder}")
 
     def decorator(struct_cls: type):
+        struct_cls.byteorder = byteorder
+
         return struct_cls
 
     if cls is None:
