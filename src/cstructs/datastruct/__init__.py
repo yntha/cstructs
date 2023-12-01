@@ -31,11 +31,6 @@ class DataStruct(type):
     size: int = None
     _source_class = None
 
-    def __new__(cls, name: str, bases: typing.Tuple[type], namespace: dict):
-        cls.__qualname__ = f"cstructs.datastruct.{cls._source_class.__name__}"
-
-        return super().__new__(cls, name, bases, namespace)
-
     def __call__(cls, stream: typing.BinaryIO, *args):
         if not hasattr(stream, "read"):
             raise TypeError("Expected stream to have a read method")
@@ -48,6 +43,7 @@ def datastruct(cls=None, /, *, byteorder: str = "native"):
     def decorator(struct_cls: type):
         struct_cls.byteorder = byteorder
         struct_cls._source_class = struct_cls
+        struct_cls.__qualname__ = f"cstructs.datastruct.{struct_cls.__name__}"
 
         return struct_cls
 
