@@ -43,6 +43,7 @@ def datastruct(cls=None, /, *, byteorder: str = "native"):
     def decorator(struct_cls: type):
         struct_cls.byteorder = byteorder
         struct_cls._source_class = struct_cls
+        struct_cls.size = 0
         struct_cls.__qualname__ = f"cstructs.datastruct.{struct_cls.__name__}"
 
         return struct_cls
