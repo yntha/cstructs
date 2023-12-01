@@ -13,7 +13,7 @@
 #  You should have received a copy of the GNU General Public License along with        -
 #  this program. If not, see <http://www.gnu.org/licenses/>.                           -
 # --------------------------------------------------------------------------------------
-from cstructs.datastruct import datastruct as backend_datastruct
+from cstructs.datastruct import datastruct as backend_datastruct, DataStruct
 
 
 def datastruct(*args, **kwargs):
