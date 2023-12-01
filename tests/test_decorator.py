@@ -16,7 +16,7 @@
 import pytest
 
 from cstructs import datastruct
-from cstructs.exc import InvalidFormatString, InvalidByteOrder
+from cstructs.exc import InvalidByteOrder
 
 
 def test_bare_decorator_call():
