@@ -25,8 +25,10 @@ def test_metaclass():
     class Test(metaclass=DataStruct):
         pass
 
-    # check that the metaclass transforms the class name
-    assert Test.__name__ == "cstructs.datastruct.Test"
+    # check that the metaclass transforms the class qualname
+    # this serves as a marker for classes that have been transformed
+    # by the metaclass.
+    assert Test.__qualname__ == "cstructs.datastruct.Test"
 
     # check that the metaclass adds the following fields:
     # - on_read: a callback function that is called after the struct is read
@@ -34,11 +36,13 @@ def test_metaclass():
     # - meta: a collection of member metadata
     # - byteorder: the byteorder of the struct
     # - size: the size of the struct
+    # - _source_class: the original class that was passed to the decorator
     assert hasattr(Test, "on_read")
     assert hasattr(Test, "on_write")
     assert hasattr(Test, "meta")
     assert hasattr(Test, "byteorder")
     assert hasattr(Test, "size")
+    assert hasattr(Test, "_source_class")
 
     # on_read and on_write should both be initialized to None if the user does not
     # provide a callback function.
@@ -56,6 +60,9 @@ def test_metaclass():
 
     # size should always be 0 for now.
     assert Test.size == 0
+
+    # _source_class should be the original class that was passed to the decorator
+    assert Test._source_class == Test
 
     # ensure that the metaclass transforms this class into a callable
     assert callable(Test)

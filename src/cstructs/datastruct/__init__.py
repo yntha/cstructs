@@ -29,10 +29,14 @@ class DataStruct(type):
     meta: StructMeta = None
     byteorder: str = None
     size: int = None
+    _source_class = None
 
     def __call__(cls, stream: typing.BinaryIO, *args):
         if not hasattr(stream, "read"):
             raise TypeError("Expected stream to have a read method")
+
+    def __qualname__(cls):
+        return f"cstructs.datastruct.{cls._source_class.__name__}"
 
 
 def datastruct(cls=None, /, *, byteorder: str = "native"):
@@ -41,6 +45,7 @@ def datastruct(cls=None, /, *, byteorder: str = "native"):
 
     def decorator(struct_cls: type):
         struct_cls.byteorder = byteorder
+        struct_cls._source_class = struct_cls
 
         return struct_cls
 
