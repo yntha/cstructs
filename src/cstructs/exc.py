@@ -13,8 +13,9 @@
 #  You should have received a copy of the GNU General Public License along with        -
 #  this program. If not, see <http://www.gnu.org/licenses/>.                           -
 # --------------------------------------------------------------------------------------
-from cstructs.datastruct import datastruct as backend_datastruct
+class InvalidFormatString(Exception):
+    pass
 
 
-def datastruct(*args, **kwargs):
-    return backend_datastruct(*args, **kwargs)
+class InvalidByteOrder(Exception):
+    pass

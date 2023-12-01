@@ -13,8 +13,29 @@
 #  You should have received a copy of the GNU General Public License along with        -
 #  this program. If not, see <http://www.gnu.org/licenses/>.                           -
 # --------------------------------------------------------------------------------------
-from cstructs.datastruct import datastruct as backend_datastruct
+import struct
+
+from cstructs.exc import InvalidByteOrder, InvalidFormatString
 
 
-def datastruct(*args, **kwargs):
-    return backend_datastruct(*args, **kwargs)
+_byteorder_map = {
+    "native": "@",
+    "little": "<",
+    "network": "!",
+    "big": ">"
+}
+
+
+def datastruct(format_str: str = "", byteorder: str = "native"):
+    if byteorder not in _byteorder_map:
+        raise InvalidByteOrder(f"Invalid byteorder: {byteorder}")
+
+    try:
+        struct.calcsize(format_str)
+    except struct.error:
+        raise InvalidFormatString(f"Invalid format string: {format_str}")
+
+    def decorator(cls):
+        return cls
+
+    return decorator
