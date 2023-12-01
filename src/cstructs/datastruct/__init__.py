@@ -18,12 +18,11 @@ import struct
 from cstructs.exc import InvalidByteOrder, InvalidFormatString
 
 
-_byteorder_map = {
-    "native": "@",
-    "little": "<",
-    "network": "!",
-    "big": ">"
-}
+_byteorder_map = {"native": "@", "little": "<", "network": "!", "big": ">"}
+
+
+class DataStruct(type):
+    pass
 
 
 def datastruct(cls=None, /, *, byteorder: str = "native"):
