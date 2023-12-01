@@ -26,16 +26,14 @@ _byteorder_map = {
 }
 
 
-def datastruct(format_str: str = "", byteorder: str = "native"):
+def datastruct(cls=None, /, *, byteorder: str = "native"):
     if byteorder not in _byteorder_map:
         raise InvalidByteOrder(f"Invalid byteorder: {byteorder}")
 
-    try:
-        struct.calcsize(format_str)
-    except struct.error:
-        raise InvalidFormatString(f"Invalid format string: {format_str}")
+    def decorator(struct_cls: type):
+        return struct_cls
 
-    def decorator(cls):
-        return cls
+    if cls is None:
+        return decorator
 
-    return decorator
+    return decorator(cls)

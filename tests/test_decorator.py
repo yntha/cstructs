@@ -25,22 +25,8 @@ def test_bare_decorator_call():
         pass
 
 
-def fn_decorator_call_with_format_str(format_str: str):
-    @datastruct(format_str, "little")
-    class Test:
-        pass
-
-
-def test_decorator_call_with_args():
-    fn_decorator_call_with_format_str("300cc")  # vrrrrr, size should be 301
-
-    # test improper format string
-    with pytest.raises(InvalidFormatString):
-        fn_decorator_call_with_format_str("300ccZ!!")
-
-
 def fn_decorator_call_with_byteorder(byteorder: str):
-    @datastruct("I", byteorder)
+    @datastruct(byteorder=byteorder)
     class Test:
         pass
 
