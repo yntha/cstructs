@@ -49,9 +49,6 @@ def test_metaclass():
     assert Test.on_read is None
     assert Test.on_write is None
 
-    # meta should be an instance of StructMeta
-    assert isinstance(Test.meta, StructMeta)
-
     # for now, meta should be None
     assert Test.meta is None
 
