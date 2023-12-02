@@ -14,6 +14,7 @@
 #  this program. If not, see <http://www.gnu.org/licenses/>.                           -
 # --------------------------------------------------------------------------------------
 from cstructs.datastruct import datastruct as backend_datastruct, DataStruct
+from cstructs.nativetypes import NativeTypes
 
 
 def datastruct(*args, **kwargs):
