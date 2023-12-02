@@ -15,3 +15,7 @@
 # --------------------------------------------------------------------------------------
 class InvalidByteOrder(Exception):
     pass
+
+
+class InvalidTypeDef(Exception):
+    pass
