@@ -50,13 +50,8 @@ class MetadataItem:
 
 
 class StructMeta:
-    def __init__(self):
-        self.size = 0
-
     def add_item(self, item: MetadataItem):
         setattr(self, item.name, item)
-
-        self.size += item.size
 
     def __iter__(self):
         for attr in dir(self):
