@@ -48,7 +48,7 @@ def datastruct(cls=None, /, *, byteorder: str = "native"):
 
         # add all annotations to the meta
         for name, type_ in struct_cls.__annotations__.items():
-            if not isinstance(item_type, NativeType):
+            if not isinstance(type_, NativeType):
                 raise InvalidTypeDef(f"Invalid type definition for {name}: {type_}")
 
             item_name = type_.name
