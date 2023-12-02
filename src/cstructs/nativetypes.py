@@ -13,7 +13,7 @@
 #  You should have received a copy of the GNU General Public License along with        -
 #  this program. If not, see <http://www.gnu.org/licenses/>.                           -
 # --------------------------------------------------------------------------------------
-import enum
+from cstructs.exc import InvalidTypeDef
 
 
 class NativeType:
@@ -29,7 +29,12 @@ class NativeType:
     # of a native type by calling the NativeType instance. Ex:
     # NativeType.uint64(5) will invoke this function and set the repeat
     # length to 5.
-    def __call__(self, repeat_length):
+    def __call__(self, repeat_length: int):
+        if repeat_length <= 0:
+            raise InvalidTypeDef(
+                f"repeat length must be greater than 0, got {repeat_length}"
+            )
+
         self.repeat_length = repeat_length
 
         if self.size == -1:
@@ -44,7 +49,7 @@ class NativeType:
         return self.name
 
 
-class NativeTypes(enum.Enum):
+class NativeTypes:
     # long typedef names
     uint64 = NativeType("uint64", 8, int)
     uint32 = NativeType("uint32", 4, int)
