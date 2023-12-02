@@ -55,7 +55,7 @@ class StructMeta:
 
     def __iter__(self):
         for attr in dir(self):
-            if not attr.startswith('__'):
+            if not attr.startswith('__') and not callable(getattr(self, attr)):
                 yield getattr(self, attr)
 
     def __getitem__(self, item):
