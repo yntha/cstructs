@@ -15,7 +15,8 @@
 # --------------------------------------------------------------------------------------
 import pytest
 
-from cstructs.datastruct.metadata import StructMeta, MetaDataItem
+from cstructs.datastruct.metadata import StructMeta, MetadataItem
+from cstructs.exc import InvalidTypeDef
 from cstructs import datastruct, DataStruct, NativeTypes
 
 
@@ -36,19 +37,19 @@ def test_struct_meta_class_with_fields():
     @datastruct
     class Test(metaclass=DataStruct):
         a: NativeTypes.uint32
-        b: NativeTypes.string
+        b: NativeTypes.bytestring(8)
 
     # ensure that meta behaves like a sequence
-    assert isinstance(Test.meta[0], MetaDataItem)
-    assert isinstance(Test.meta[1], MetaDataItem)
+    assert isinstance(Test.meta[0], MetadataItem)
+    assert isinstance(Test.meta[1], MetadataItem)
 
     # ensure that the metadata also implements dict like behavior
-    assert isinstance(Test.meta["a"], MetaDataItem)
-    assert isinstance(Test.meta["b"], MetaDataItem)
+    assert isinstance(Test.meta["a"], MetadataItem)
+    assert isinstance(Test.meta["b"], MetadataItem)
 
     # ensure that the metadata fields are also instance fields
-    assert isinstance(Test.a, MetaDataItem)
-    assert isinstance(Test.b, MetaDataItem)
+    assert isinstance(Test.a, MetadataItem)
+    assert isinstance(Test.b, MetadataItem)
 
     # ensure that each metadata item has a name, type, and size
     # field
@@ -57,8 +58,10 @@ def test_struct_meta_class_with_fields():
     assert Test.a.size == NativeTypes.uint32.size
 
     assert Test.b.name == "b"
-    assert Test.b.type in NativeTypes.string
-    assert Test.b.size == NativeTypes.string.size
+    assert Test.b.type in NativeTypes.bytestring
+
+    # ensure that the size of the bytestring is correct
+    assert Test.b.size == 8
 
 
 def test_native_types():
@@ -66,7 +69,7 @@ def test_native_types():
     class Test(metaclass=DataStruct):
         a: NativeTypes.uint32
         b: NativeTypes.u32
-        c: NativeTypes.uint16
+        c: NativeTypes.uint16(4)
         d: NativeTypes.u16
         e: NativeTypes.uint8
         f: NativeTypes.u8
@@ -80,15 +83,15 @@ def test_native_types():
         n: NativeTypes.double
         o: NativeTypes.bool
         p: NativeTypes.char
-        q: NativeTypes.bytestring
+        q: NativeTypes.bytestring(10)
         r: NativeTypes.uint64
         s: NativeTypes.u64
         t: NativeTypes.int64
         u: NativeTypes.i64
 
     # ensure that the metadata fields are also instance fields
-    assert isinstance(Test.a, MetaDataItem)
-    assert isinstance(Test.b, MetaDataItem)
+    assert isinstance(Test.a, MetadataItem)
+    assert isinstance(Test.b, MetadataItem)
 
     # ensure that each metadata item has a name, type, and size
     # field
@@ -101,3 +104,7 @@ def test_native_types():
     # ensure that the native types have a field that represents this typedef as a
     # python primitive
     assert NativeTypes.uint32.python_type == int
+
+    # ensure that an error is raised if the repeat length is less than or equal to 0
+    with pytest.raises(InvalidTypeDef):
+        NativeTypes.uint32(0)
