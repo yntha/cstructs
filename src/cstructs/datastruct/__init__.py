@@ -13,7 +13,7 @@
 #  You should have received a copy of the GNU General Public License along with        -
 #  this program. If not, see <http://www.gnu.org/licenses/>.                           -
 # --------------------------------------------------------------------------------------
-import struct
+import dataclasses
 import typing
 
 from cstructs.exc import InvalidByteOrder, InvalidTypeDef
@@ -42,25 +42,31 @@ def datastruct(cls=None, /, *, byteorder: str = "native"):
         raise InvalidByteOrder(f"Invalid byteorder: {byteorder}")
 
     def decorator(struct_cls: type):
-        struct_cls.byteorder = byteorder
-        struct_cls._source_class = struct_cls
-        struct_cls.meta = StructMeta()
+        # noinspection PyTypeChecker
+        dataclass_cls = dataclasses.dataclass(struct_cls)
 
-        # add all annotations to the meta
-        for name, type_ in struct_cls.__annotations__.items():
-            if not isinstance(type_, NativeType):
-                raise InvalidTypeDef(f"Invalid type definition for {name}: {type_}")
+        dataclass_cls.byteorder = byteorder
+        dataclass_cls._source_class = struct_cls
+        dataclass_cls.meta = StructMeta()
 
-            item_name = type_.name
-            item_size = type_.size
-            item_typedef = type_
+        for field in dataclasses.fields(dataclass_cls):
+            if not isinstance(field.type, NativeType):
+                raise InvalidTypeDef(
+                    f"Invalid type definition for {field.name}: {field.type}"
+                )
 
-            struct_cls.meta.add_item(MetadataItem(item_name, item_typedef, item_size))
+            item_name = field.name
+            item_size = field.type.size
+            item_typedef = field.type
 
-        struct_cls.size = struct_cls.meta.size
-        struct_cls.__qualname__ = f"cstructs.datastruct.{struct_cls.__name__}"
+            dataclass_cls.meta.add_item(
+                MetadataItem(item_name, item_typedef, item_size)
+            )
 
-        return struct_cls
+        dataclass_cls.size = dataclass_cls.meta.size
+        dataclass_cls.__qualname__ = f"cstructs.datastruct.{dataclass_cls.__name__}"
+
+        return dataclass_cls
 
     if cls is None:
         return decorator
