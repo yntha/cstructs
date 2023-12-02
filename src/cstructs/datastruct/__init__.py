@@ -16,8 +16,9 @@
 import struct
 import typing
 
-from cstructs.exc import InvalidByteOrder
-from cstructs.datastruct.metadata import StructMeta
+from cstructs.exc import InvalidByteOrder, InvalidTypeDef
+from cstructs.datastruct.metadata import StructMeta, MetadataItem
+from cstructs.nativetypes import NativeType
 
 
 _byteorder_map = {"native": "@", "little": "<", "network": "!", "big": ">"}
@@ -43,7 +44,20 @@ def datastruct(cls=None, /, *, byteorder: str = "native"):
     def decorator(struct_cls: type):
         struct_cls.byteorder = byteorder
         struct_cls._source_class = struct_cls
-        struct_cls.size = 0
+        struct_cls.meta = StructMeta()
+
+        # add all annotations to the meta
+        for name, type_ in struct_cls.__annotations__.items():
+            if not isinstance(item_type, NativeType):
+                raise InvalidTypeDef(f"Invalid type definition for {name}: {type_}")
+
+            item_name = type_.name
+            item_size = type_.size
+            item_typedef = type_
+
+            struct_cls.meta.add_item(MetadataItem(item_name, item_typedef, item_size))
+
+        struct_cls.size = struct_cls.meta.size
         struct_cls.__qualname__ = f"cstructs.datastruct.{struct_cls.__name__}"
 
         return struct_cls
