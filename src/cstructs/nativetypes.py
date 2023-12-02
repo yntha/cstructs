@@ -43,7 +43,7 @@ class NativeType:
         return self
 
     def __repr__(self):
-        return f"NativeType({self.name}, {self.size})"
+        return f"NativeType(typedef={self.name}, size={self.size})"
 
     def __str__(self):
         return self.name
