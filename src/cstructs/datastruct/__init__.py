@@ -63,7 +63,7 @@ def datastruct(cls=None, /, *, byteorder: str = "native"):
                 MetadataItem(item_name, item_typedef, item_size)
             )
 
-        dataclass_cls.size = 0
+        dataclass_cls.size = sum([item.size for item in dataclass_cls.meta])
         dataclass_cls.__qualname__ = f"cstructs.datastruct.{dataclass_cls.__name__}"
 
         return dataclass_cls
