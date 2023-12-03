@@ -54,11 +54,11 @@ def test_struct_meta_class_with_fields():
     # ensure that each metadata item has a name, type, and size
     # field
     assert Test.meta.a.name == "a"
-    assert Test.meta.a.type in NativeTypes.uint32
+    assert Test.meta.a.type == NativeTypes.uint32
     assert Test.meta.a.size == NativeTypes.uint32.size
 
     assert Test.meta.b.name == "b"
-    assert Test.meta.b.type in NativeTypes.bytestring
+    assert Test.meta.b.type == NativeTypes.bytestring
 
     # ensure that the size of the bytestring is correct
     assert Test.meta.b.size == 8
