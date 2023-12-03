@@ -48,20 +48,20 @@ def test_struct_meta_class_with_fields():
     assert isinstance(Test.meta["b"], MetadataItem)
 
     # ensure that the metadata fields are also instance fields
-    assert isinstance(Test.a, MetadataItem)
-    assert isinstance(Test.b, MetadataItem)
+    assert isinstance(Test.meta.a, MetadataItem)
+    assert isinstance(Test.meta.b, MetadataItem)
 
     # ensure that each metadata item has a name, type, and size
     # field
-    assert Test.a.name == "a"
-    assert Test.a.type in NativeTypes.uint32
-    assert Test.a.size == NativeTypes.uint32.size
+    assert Test.meta.a.name == "a"
+    assert Test.meta.a.type in NativeTypes.uint32
+    assert Test.meta.a.size == NativeTypes.uint32.size
 
-    assert Test.b.name == "b"
-    assert Test.b.type in NativeTypes.bytestring
+    assert Test.meta.b.name == "b"
+    assert Test.meta.b.type in NativeTypes.bytestring
 
     # ensure that the size of the bytestring is correct
-    assert Test.b.size == 8
+    assert Test.meta.b.size == 8
 
 
 def test_native_types():
@@ -90,16 +90,16 @@ def test_native_types():
         u: NativeTypes.i64
 
     # ensure that the metadata fields are also instance fields
-    assert isinstance(Test.a, MetadataItem)
-    assert isinstance(Test.b, MetadataItem)
+    assert isinstance(Test.meta.a, MetadataItem)
+    assert isinstance(Test.meta.b, MetadataItem)
 
     # ensure that each metadata item has a name, type, and size
     # field
-    assert Test.a.name == "a"
+    assert Test.meta.a.name == "a"
 
     # ensure that the type field can be either them long typedef or the short typedef
-    assert Test.a.type in (NativeTypes.uint32, NativeTypes.u32)
-    assert Test.a.size == NativeTypes.uint32.size
+    assert Test.meta.a.type in (NativeTypes.uint32, NativeTypes.u32)
+    assert Test.meta.a.size == NativeTypes.uint32.size
 
     # ensure that the native types have a field that represents this typedef as a
     # python primitive
