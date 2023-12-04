@@ -13,3 +13,51 @@
 #  You should have received a copy of the GNU General Public License along with        -
 #  this program. If not, see <http://www.gnu.org/licenses/>.                           -
 # --------------------------------------------------------------------------------------
+import pytest
+import io
+
+from cstructs import datastruct, NativeTypes, DataStruct
+
+
+def test_read_basic():
+    @datastruct
+    class Test(DataStruct):
+        a: NativeTypes.uint8
+        b: NativeTypes.uint8
+
+    stream = io.BytesIO(bytes.fromhex("01 02"))
+    test = Test(stream)
+
+    assert test.a == 1
+    assert test.b == 2
+
+
+def test_read_complex():
+    @datastruct(byteorder="big")
+    class Test(DataStruct):
+        a: NativeTypes.uint16
+        b: NativeTypes.uint32
+        c: NativeTypes.i32
+        d: NativeTypes.uint64
+        e: NativeTypes.bytestring(4)
+        f: NativeTypes.char(12)
+
+    stream = io.BytesIO()
+
+    stream.write(bytes.fromhex("0001"))
+    stream.write(bytes.fromhex("00000002"))
+    stream.write(bytes.fromhex("fffffffd"))
+    stream.write(bytes.fromhex("0000000000000004"))
+    stream.write(bytes.fromhex("01020304"))
+    stream.write(b"Hello World!")
+
+    stream.seek(0)
+
+    test = Test(stream)
+
+    assert test.a == 1
+    assert test.b == 2
+    assert test.c == -3
+    assert test.d == 4
+    assert test.e == b"\x01\x02\x03\x04"
+    assert test.f == "Hello World!"
