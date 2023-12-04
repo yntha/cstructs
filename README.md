@@ -2,6 +2,8 @@
 
 [![PyPI - Version](https://img.shields.io/pypi/v/cstructs.svg)](https://pypi.org/project/cstructs)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/cstructs.svg)](https://pypi.org/project/cstructs)
+[![PyPI - License](https://img.shields.io/pypi/l/cstructs.svg)](https://pypi.org/project/cstructs)
+[![Python application](https://github.com/yntha/cstructs/actions/workflows/run-tests.yml/badge.svg)](https://github.com/yntha/cstructs/actions/workflows/run-tests.yml)
 
 -----
 ***Note:*** *This version supercedes the original [cstruct](https://github.com/yntha/cstruct) package. This is my first attempt at a test driven development cycle, so I apologize in advance if the things that I do don't make sense.*
