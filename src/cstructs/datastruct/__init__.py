@@ -15,6 +15,7 @@
 # --------------------------------------------------------------------------------------
 import dataclasses
 import typing
+import io
 
 from cstructs.exc import InvalidByteOrder, InvalidTypeDef
 from cstructs.datastruct.metadata import StructMeta, MetadataItem
@@ -32,9 +33,12 @@ class DataStruct(type):
     size: int = None
     _source_class = None
 
+    def __new__(cls, *args, **kwargs):
+        return super().__new__(cls, cls.__name__, cls.__bases__, dict(vars(cls)))
+
     def __call__(cls, stream: typing.BinaryIO, *args):
-        if not hasattr(stream, "read"):
-            raise TypeError("Expected stream to have a read method")
+        if not isinstance(stream, io.IOBase):
+            raise TypeError(f"Expected file-like object, got {type(stream)}")
 
 
 def datastruct(cls=None, /, *, byteorder: str = "native"):
