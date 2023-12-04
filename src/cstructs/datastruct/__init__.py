@@ -26,12 +26,12 @@ _byteorder_map = {"native": "@", "little": "<", "network": "!", "big": ">"}
 
 
 class DataStruct(type):
-    on_read: typing.Callable = None
-    on_write: typing.Callable = None
-    meta: StructMeta = None
-    byteorder: str = None
-    size: int = None
-    _source_class = None
+    on_read: typing.ClassVar[typing.Callable] = None
+    on_write: typing.ClassVar[typing.Callable] = None
+    meta: typing.ClassVar[StructMeta] = None
+    byteorder: typing.ClassVar[str] = None
+    size: typing.ClassVar[int] = None
+    _source_class: typing.ClassVar[type] = None
 
     def __new__(cls, *args, **kwargs):
         return super().__new__(cls, cls.__name__, cls.__bases__, dict(vars(cls)))
