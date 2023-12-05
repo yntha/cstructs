@@ -34,7 +34,13 @@ class DataStruct(type):
     _source_class: typing.ClassVar[type] = None
 
     def __new__(cls, *args, **kwargs):
-        return super().__new__(cls, cls.__name__, cls.__bases__, dict(vars(cls)))
+        if len(args) > 0 and isinstance(args[0], io.IOBase):
+            # this is a call to the class constructor. `cls`
+            # would be the class object itself. (not the
+            # metaclass)
+            args = (cls.__name__, cls.__bases__, dict(vars(cls)))
+
+        return super().__new__(cls, *args, **kwargs)
 
     def __call__(cls, stream: typing.BinaryIO, *args):
         if not isinstance(stream, io.IOBase):
