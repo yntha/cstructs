@@ -36,13 +36,11 @@ def test_metaclass():
     # - meta: a collection of member metadata
     # - byteorder: the byteorder of the struct
     # - size: the size of the struct
-    # - _source_class: the original class that was passed to the decorator
     assert hasattr(Test, "on_read")
     assert hasattr(Test, "on_write")
     assert hasattr(Test, "meta")
     assert hasattr(Test, "byteorder")
     assert hasattr(Test, "size")
-    assert hasattr(Test, "_source_class")
 
     # on_read and on_write should both be initialized to None if the user does not
     # provide a callback function.
@@ -55,19 +53,13 @@ def test_metaclass():
     # size should always be 0 for now.
     assert Test.size == 0
 
-    # _source_class should be the original class that was passed to the decorator
-    assert Test._source_class == Test
-
-    # ensure that the metaclass transforms this class into a callable
-    assert callable(Test)
-
-    # ensure that the only argument of the callable is the stream we
+    # ensure that the only argument of the read function is the stream we
     # want to read from.
     with pytest.raises(TypeError):
-        Test()
+        Test.read()
     with pytest.raises(TypeError):
-        Test(1, 2, 3)
+        Test.read(1, 2, 3)
     with pytest.raises(TypeError):
-        Test(None)
+        Test.read(None)
 
-    Test(io.BytesIO(b""))
+    Test.read(io.BytesIO(b""))

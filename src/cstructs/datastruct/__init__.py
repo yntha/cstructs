@@ -14,8 +14,8 @@
 #  this program. If not, see <http://www.gnu.org/licenses/>.                           -
 # --------------------------------------------------------------------------------------
 import dataclasses
-import typing
 import io
+import typing
 
 from cstructs.exc import InvalidByteOrder, InvalidTypeDef
 from cstructs.datastruct.metadata import StructMeta, MetadataItem
@@ -31,20 +31,13 @@ class DataStruct(type):
     meta: typing.ClassVar[StructMeta] = None
     byteorder: typing.ClassVar[str] = None
     size: typing.ClassVar[int] = None
-    _source_class: typing.ClassVar[type] = None
 
-    def __new__(cls, *args, **kwargs):
-        if len(args) > 0 and isinstance(args[0], io.IOBase):
-            # this is a call to the class constructor. `cls`
-            # would be the class object itself. (not the
-            # metaclass)
-            args = (cls.__name__, cls.__bases__, dict(vars(cls)))
-
-        return super().__new__(cls, *args, **kwargs)
-
-    def __call__(cls, stream: typing.BinaryIO, *args):
+    def read(cls, stream: typing.BinaryIO):
         if not isinstance(stream, io.IOBase):
-            raise TypeError(f"Expected file-like object, got {type(stream)}")
+            raise TypeError("Expected a binary stream")
+
+    def write(cls):
+        pass
 
 
 def datastruct(cls=None, /, *, byteorder: str = "native"):
@@ -56,7 +49,6 @@ def datastruct(cls=None, /, *, byteorder: str = "native"):
         dataclass_cls = dataclasses.dataclass(struct_cls)
 
         dataclass_cls.byteorder = byteorder
-        dataclass_cls._source_class = struct_cls
         dataclass_cls.meta = StructMeta()
 
         for field in dataclasses.fields(dataclass_cls):
